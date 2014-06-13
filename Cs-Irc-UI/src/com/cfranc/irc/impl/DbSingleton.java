@@ -35,6 +35,7 @@ public class DbSingleton {
 		if (JDBC.isValidURL(s)) {
 		    try {
 		    	connection = DriverManager.getConnection(s);
+		    	System.out.println(connection.toString());
 		    } catch (SQLException e) {
 		    	e.printStackTrace();
 		    }

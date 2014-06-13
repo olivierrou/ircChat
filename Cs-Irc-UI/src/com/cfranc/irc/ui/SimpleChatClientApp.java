@@ -6,8 +6,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,8 +18,11 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
+
 import com.cfranc.irc.client.ClientToServerThread;
+import com.cfranc.irc.impl.DbSingleton;
 import com.cfranc.irc.server.User;
+import com.cfranc.irc.ui.SimpleChatFrameClient;
 /**
  * <code>SimpleChatClientApp</code> Frame de connection Client.
  * 
@@ -156,6 +161,10 @@ public class SimpleChatClientApp {
 	 */
 	public static void main(String[] args) {
 		final SimpleChatClientApp app = new SimpleChatClientApp();
+		
+		// Connexion à la base
+		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
