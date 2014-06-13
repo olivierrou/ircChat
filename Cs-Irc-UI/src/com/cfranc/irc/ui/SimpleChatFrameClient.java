@@ -131,7 +131,13 @@ public class SimpleChatFrameClient extends JFrame {
 		
 		JMenuItem mntmEnregistrerSous = new JMenuItem(Messages.getString("SimpleChatFrameClient.6")); //$NON-NLS-1$
 		mnFile.add(mntmEnregistrerSous);
-				
+
+		// Menu Quitter
+		JMenuItem mntmQuitter = new JMenuItem(Messages.getString("SimpleChatFrameClient.15")); //$NON-NLS-1$
+		mntmQuitter.addActionListener(new QuitterActionListener());
+		mnFile.add(mntmQuitter);
+		
+
 		JMenu mnOutils = new JMenu(Messages.getString("SimpleChatFrameClient.7")); //$NON-NLS-1$
 		mnOutils.setMnemonic('O');
 		menuBar.add(mnOutils);
@@ -200,6 +206,7 @@ public class SimpleChatFrameClient extends JFrame {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if(isScrollLocked){
+					
 					e.getAdjustable().setValue(e.getAdjustable().getMaximum());
 				}				
 			}
@@ -262,6 +269,7 @@ public class SimpleChatFrameClient extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				toolBar.setVisible(mntmCacherBarreMenu.isSelected());
 			}
 		});	
@@ -281,7 +289,7 @@ public class SimpleChatFrameClient extends JFrame {
 	
 	private class SendAction extends ResourceAction{	
 		private Icon getIcon(){
-			return new ImageIcon(SimpleChatFrameClient.class.getResource("send_16_16.jpg")); //$NON-NLS-1$
+			return null; //new ImageIcon(SimpleChatFrameClient.class.getResource("send_16_16.jpg")); //$NON-NLS-1$
 		}
 		public SendAction(){
 			putValue(NAME, Messages.getString("SimpleChatFrameClient.3")); //$NON-NLS-1$

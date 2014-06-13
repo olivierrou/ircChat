@@ -33,6 +33,8 @@ import com.cfranc.irc.ui.SimpleChatFrameClient;
  */
 
 public class SimpleChatClientApp {
+	public static SimpleChatClientApp app = new SimpleChatClientApp();
+	
     static String[] ConnectOptionNames = { "Connect" };	
     static String   ConnectTitle = "Connection Information";
     Socket socketClientServer;
@@ -103,7 +105,8 @@ public class SimpleChatClientApp {
 			}
 			@Override
 			public void windowClosed(WindowEvent e) {
-				quitApp(SimpleChatClientApp.this);
+				//quitApp(SimpleChatClientApp.this);
+				quitApp();
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -147,7 +150,7 @@ public class SimpleChatClientApp {
 			// Start connection services
 			clientToServerThread = new ClientToServerThread(documentModel, clientListModel, socketClientServer, oUser);
 			clientToServerThread.start();
-
+			
 			System.out.println("Connected: " + socketClientServer);
 		} catch (UnknownHostException uhe) {
 			System.out.println("Host unknown: " + uhe.getMessage());
@@ -160,7 +163,7 @@ public class SimpleChatClientApp {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		final SimpleChatClientApp app = new SimpleChatClientApp();
+		
 		
 		// Connexion à la base
 		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
@@ -184,10 +187,10 @@ public class SimpleChatClientApp {
 			line=sc.nextLine();			
 		}
 		
-		quitApp(app);
+		quitApp();
 	}
 
-	private static void quitApp(final SimpleChatClientApp app) {
+	public static void quitApp() {
 		try {
 			app.clientToServerThread.quitServer();
 			app.socketClientServer.close();

@@ -60,19 +60,24 @@ public class BroadcastThread extends Thread {
 	 */
 	public static void deleteUser(User sender) {
 		
-//		// Récupère la liste des users connectés
-//		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
-//		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
-//		
-//		// Envoie l'ajout du sender à tous les users connectés
-//		while (receiverClientThreadIterator.hasNext()) {
-//			
-//			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
-//			
-//			// Envoie le message
-//			clientThread.post(IfClientServerProtocol.DEL + sender.getLogin());			
-//			System.out.println("ajoute : "+"#"+sender.getLogin()+"#");
-//		}
+		System.out.println("deleteUser");
+		// Récupère la liste des users connectés
+		Collection<ServerToClientThread> clientTreads=clientTreadsMap.values();
+		Iterator<ServerToClientThread> receiverClientThreadIterator=clientTreads.iterator();
+		
+		// Envoie l'ajout du sender à tous les users connectés
+		while (receiverClientThreadIterator.hasNext()) {
+			
+			ServerToClientThread clientThread = (ServerToClientThread) receiverClientThreadIterator.next();
+			
+			// Envoie le message
+			clientThread.post(IfClientServerProtocol.DEL + sender.getLogin());			
+			System.out.println("supprime : "+"#"+sender.getLogin()+"#");
+			
+		}
+		clientTreadsMap.remove(sender);
+		
+		
 //		
 //		// Pour tous les users connectés
 //		Collection<User> listUsers = clientTreadsMap.keySet();	
@@ -139,6 +144,7 @@ public class BroadcastThread extends Thread {
 	
 	// Suppression du user du Map
 	public static void removeClient(User user){
+		System.out.println("je remove");
 		clientTreadsMap.remove(user);
 		deleteUser(user);
 	}

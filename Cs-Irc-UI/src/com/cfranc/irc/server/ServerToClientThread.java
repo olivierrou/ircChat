@@ -62,18 +62,26 @@ public class ServerToClientThread extends Thread{
 			boolean done = false;
 			while (!done) {
 				try {
+					
 					if(streamIn.available()>0){
+						
 						String line = streamIn.readUTF();
+						System.out.println("run: " + line);
 						String[] userMsg=line.split(IfClientServerProtocol.SEPARATOR);
 						String login=userMsg[1];
 						String msg=userMsg[2];
-						done = msg.equals(".bye");
+						System.out.println("msg:" + msg);
+						done = (msg.equals(".bye")  || line.startsWith(IfClientServerProtocol.DEL));
+						
 						if(!done){
 							if(login.equals(user)){
 								System.err.println("ServerToClientThread::run(), login!=user"+login);
 							}
 							BroadcastThread.sendMessage(user,msg);
+						} else {
+							BroadcastThread.deleteUser(user);
 						}
+							
 					}
 					else{
 						doPost();

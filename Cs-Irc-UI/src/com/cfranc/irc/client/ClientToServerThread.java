@@ -65,7 +65,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
     
 	void readMsg() throws IOException{
 		String line = streamIn.readUTF();
-		System.out.println(line);
+		System.out.println("readMsg "+ line);
 		
 		if(line.startsWith(IfClientServerProtocol.ADD)){
 			String newUser=line.substring(IfClientServerProtocol.ADD.length());
@@ -109,12 +109,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 		return res;
 	}
 	
-	public void quitServer() throws IOException{
-		streamOut.writeUTF(IfClientServerProtocol.DEL+oUser.getLogin());
-		streamOut.flush();
-		done=true;
-	}
-	
+
 	boolean done;
 	@Override
 	public void run() {
@@ -183,6 +178,12 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 //		this.clientListModel = clientListModel;
 //	}
 	
+	public void quitServer() throws IOException{
+		System.out.println("quitServer");
+		streamOut.writeUTF(IfClientServerProtocol.DEL+oUser.getLogin());
+		streamOut.flush();
+		done=true;
+	}
 	
 }
 
