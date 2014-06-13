@@ -7,13 +7,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+
 import javax.swing.DefaultListModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
+
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.server.User;
 import com.cfranc.irc.ui.SimpleChatClientApp;
+import com.cfranc.irc.ui.SimpleChatFrameServer;
 
 public class ClientToServerThread extends Thread implements IfSenderModel{
 	private Socket socket = null;
@@ -173,15 +176,13 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 	public DefaultListModel<String> getClientListModel() {
 		return clientListModel;
 	}
-//
-//	void setClientListModel(DefaultListModel<String> clientListModel) {
-//		this.clientListModel = clientListModel;
-//	}
-	
+
 	public void quitServer() throws IOException{
 		System.out.println("quitServer");
+		
 		streamOut.writeUTF(IfClientServerProtocol.DEL+oUser.getLogin());
 		streamOut.flush();
+
 		done=true;
 	}
 	

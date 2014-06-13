@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.cfranc.irc.IfClientServerProtocol;
+import com.cfranc.irc.ui.SimpleChatFrameServer;
 
 public class BroadcastThread extends Thread {
 	
@@ -75,7 +76,9 @@ public class BroadcastThread extends Thread {
 			System.out.println("supprime : "+"#"+sender.getLogin()+"#");
 			
 		}
+		ClientConnectThread.removeNode(sender);
 		clientTreadsMap.remove(sender);
+
 		
 		
 //		
@@ -136,6 +139,7 @@ public class BroadcastThread extends Thread {
 		else{
 			clientTreadsMap.put(user, serverToClientThread);
 			addUser(user, serverToClientThread);
+			
 		}
 		return res;
 	}
@@ -144,9 +148,9 @@ public class BroadcastThread extends Thread {
 	
 	// Suppression du user du Map
 	public static void removeClient(User user){
-		System.out.println("je remove");
 		clientTreadsMap.remove(user);
 		deleteUser(user);
+		
 	}
 	
 	/**

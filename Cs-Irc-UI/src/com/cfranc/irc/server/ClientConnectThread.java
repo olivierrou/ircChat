@@ -5,26 +5,39 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import javax.swing.DefaultListModel;
+
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import com.cfranc.irc.IfClientServerProtocol;
-import com.sun.org.apache.xerces.internal.impl.xs.opti.DefaultNode;
 
-public class ClientConnectThread extends Thread implements IfClientServerProtocol {
-	
-	StyledDocument model=null;
-	DefaultTreeModel clientTreeModel;
-	
-	private boolean canStop=false;
+import com.cfranc.irc.IfClientServerProtocol;
+import com.cfranc.irc.ui.SimpleChatFrameServer;
+import com.cfranc.irc.ui.SimpleChatServerApp;
+
+/**
+ * Ecoute l'arrivée d'un client sur ServerApp
+ */
+
+public class ClientConnectThread extends Thread implements
+		IfClientServerProtocol {
+
+	StyledDocument model = null;
+	static DefaultTreeModel clientTreeModel;
+
+	private boolean canStop = false;
 	private ServerSocket server = null;
-	
-	private void printMsg(String msg){
+
+	/**
+	 * 
+	 * @param msg
+	 * 
+	 *            Affiche le message dans le log du ServerApp
+	 */
+	private void printMsg(String msg) {
 		try {
-			if(model!=null){
-				model.insertString(model.getLength(), msg+"\n", null);
+			if (model != null) {
+				model.insertString(model.getLength(), msg + "\n", null);
 			}
 			System.out.println(msg);
 		} catch (BadLocationException e) {
@@ -32,29 +45,37 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 			e.printStackTrace();
 		}
 	}
-	
-	public ClientConnectThread(int port, StyledDocument model, DefaultTreeModel clientTreeModel) {
+
+	/**
+	 * 
+	 * @param port
+	 * @param model
+	 * @param clientTreeModel
+	 */
+	public ClientConnectThread(int port, StyledDocument model,
+			DefaultTreeModel clientTreeModel) {
+		// public ClientConnectThread(int port, StyledDocument model) {
 		try {
-			this.model=model;
+			this.model = model;
 			this.clientTreeModel = clientTreeModel;
 			printMsg("Binding to port " + port + ", please wait  ...");
+
 			server = new ServerSocket(port);
 			printMsg("Server started: " + server);
-		} 
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			System.out.println(ioe);
 		}
 	}
-	
+
 	@Override
 	public void run() {
-		while(!canStop){
+		while (!canStop) {
 			printMsg("Waiting for a client ...");
 			Socket socket;
 			try {
 				socket = server.accept();
 				printMsg("Client accepted: " + socket);
-				
+
 				// Accept new client or close the socket
 				acceptClient(socket);
 			} catch (IOException e) {
@@ -67,58 +88,95 @@ public class ClientConnectThread extends Thread implements IfClientServerProtoco
 		}
 	}
 
-	private void acceptClient(Socket socket) throws IOException, InterruptedException {
+	/**
+	 * 
+	 * @param socket
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * 
+	 */
+	private void acceptClient(Socket socket) throws IOException,
+			InterruptedException {
+
 		// Read user login and pwd
-		DataInputStream dis=new DataInputStream(socket.getInputStream());
-		DataOutputStream dos=new DataOutputStream(socket.getOutputStream());
+		DataInputStream dis = new DataInputStream(socket.getInputStream());
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		dos.writeUTF(LOGIN_PWD);
-		while(dis.available()<=0){
+		while (dis.available() <= 0) {
 			Thread.sleep(100);
 		}
-		
-		String reponse=dis.readUTF();
+
+		String reponse = dis.readUTF();
 		String[] userPwd = reponse.split(SEPARATOR);
 		String login = userPwd[1];
 		String pwd = userPwd[2];
 		String nom = userPwd[3];
 		String prenom = userPwd[4];
-		
+
 		User newUser = new User(login, pwd, nom, prenom);
 		boolean isUserOK = authentication(newUser);
-		if(isUserOK){
-			
-			ServerToClientThread client=new ServerToClientThread(newUser, socket);
+		if (isUserOK) {
+
+			ServerToClientThread client = new ServerToClientThread(newUser,
+					socket);
 			dos.writeUTF(OK);
 
-			if(BroadcastThread.addClient(newUser, client)){
+			if (BroadcastThread.addClient(newUser, client)) {
 				client.start();
-				DefaultMutableTreeNode racine = (DefaultMutableTreeNode) clientTreeModel.getRoot();
-				DefaultMutableTreeNode parent = new DefaultMutableTreeNode(newUser.getLogin());
-				racine.add( parent );
-				parent.add(new DefaultMutableTreeNode(newUser.toString()));
-				clientTreeModel.reload();
-				dos.writeUTF(ADD+login);
+				dos.writeUTF(ADD + login);
+				addNode(newUser);
+
 			}
-		}
-		else{
+		} else {
 			System.out.println("socket.close()");
 			dos.writeUTF(KO);
 			dos.close();
 			socket.close();
 		}
 	}
-	
-	private boolean authentication(User newUser){
+
+	private boolean authentication(User newUser) {
 		return BroadcastThread.accept(newUser);
 	}
 
-	
 	public void open() throws IOException {
 	}
-	
+
 	public void close() throws IOException {
 		System.err.println("server:close()");
 		if (server != null)
 			server.close();
 	}
+
+	public static void removeNode(User u) {
+
+		System.out.println("supprime un node");
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) clientTreeModel.getRoot();
+
+		System.out.println("removeNode:" + root);
+		
+//		System.out.println(root.toString() + " " + root.getChildCount());
+		for (int i = 0; i < root.getChildCount(); i++) {
+
+			if (root.getChildAt(i).toString().equals(u.getLogin()) ) {
+				System.out.println("dégage connard");
+				root.remove(i);
+			}
+			clientTreeModel.reload();
+		}
+		
+	}
+	
+    public void addNode(User u) {
+
+		DefaultMutableTreeNode racine = (DefaultMutableTreeNode) clientTreeModel.getRoot();;
+		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(u.getLogin());
+		racine.add( parent );
+		parent.add(new DefaultMutableTreeNode(u.toString()));
+		clientTreeModel.reload();
+		
+    }
+    
+    
 }

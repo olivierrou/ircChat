@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.sql.Connection;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,21 +15,34 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyledDocument;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JPanel;
 
+import com.cfranc.irc.impl.DbSingleton;
+import com.cfranc.irc.server.User;
+
 public class SimpleChatFrameServer extends JFrame{
 
-	public StyledDocument model=null;
-	//public DefaultListModel<Object> clientListModel=null;
-	public DefaultTreeModel clientTreeModel = null;
-			
+	/**
+	 * 
+	 */
+	private StyledDocument model=null;
+	private DefaultTreeModel clientTreeModel;;
+	
+
+	
+    private static JTree tree;
+    
+
 	public SimpleChatFrameServer(int port, StyledDocument model,  DefaultTreeModel clientTreeModel) {
+		
 		super("ISM - IRC Server Manager");
 		this.model=model;
-		this.clientTreeModel=clientTreeModel;
+		
+		this.clientTreeModel = clientTreeModel;
 		initialize();
 	}
 	
@@ -56,33 +71,18 @@ public class SimpleChatFrameServer extends JFrame{
 		getContentPane().add(statusBar, BorderLayout.SOUTH);
 		
 		
-		JTree tree = new JTree(clientTreeModel);
+		tree = new JTree(clientTreeModel);
 		JScrollPane scrollPane_1 = new JScrollPane();
 		getContentPane().add(scrollPane_1, BorderLayout.WEST);
 		scrollPane_1.setViewportView(tree);
-		
-//		JPanel panel = new JPanel();
-//		panel.setMinimumSize(new Dimension(200, 200));
-//		getContentPane().add(panel, BorderLayout.WEST);
-//		panel.setLayout(new BorderLayout(0, 0));
-//		
-//		JScrollPane scrollPaneTree = new JScrollPane();
-//		panel.add(scrollPaneTree, BorderLayout.NORTH);
-//		JTree tree = new JTree(clientTreeModel);
-//		panel.add(tree, BorderLayout.CENTER);
-//		scrollPaneTree.setViewportView(tree);
-//		tree.setMinimumSize(new Dimension(200,0));
-//		scrollPaneTree.setViewportView(tree);
 
-		
-//		final JList<String> list = new JList<String>(clientListModel);
-//		list.addListSelectionListener(new ListSelectionListener() {
-//			public void valueChanged(ListSelectionEvent e) {
-//				String clientSelected=list.getSelectedValue().toString();
-//				statusBar.setText(clientSelected);
-//			}
-//		});
-//		list.setMinimumSize(new Dimension(200,0));
-//		scrollPaneList.setViewportView(list);
 	}	
+	
+
+    
+    public DefaultMutableTreeNode getRoot() {
+    	return (DefaultMutableTreeNode) clientTreeModel.getRoot();
+    }
+ 
+	
 }

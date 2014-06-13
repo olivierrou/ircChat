@@ -41,8 +41,6 @@ public class SimpleChatClientApp {
     int serverPort;
     User oUser;
     String serverName;
- // Commentaire pour test git
- // Commentaire pour test git
 	private SimpleChatFrameClient frame;
 	public StyledDocument documentModel=new DefaultStyledDocument();
 	DefaultListModel<String> clientListModel=new DefaultListModel<String>();
