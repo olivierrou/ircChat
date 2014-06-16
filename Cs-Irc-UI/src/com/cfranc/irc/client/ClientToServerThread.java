@@ -16,7 +16,6 @@ import javax.swing.text.StyledDocument;
 import com.cfranc.irc.IfClientServerProtocol;
 import com.cfranc.irc.server.User;
 import com.cfranc.irc.ui.SimpleChatClientApp;
-import com.cfranc.irc.ui.SimpleChatFrameServer;
 
 public class ClientToServerThread extends Thread implements IfSenderModel{
 	private Socket socket = null;
@@ -55,8 +54,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
         receiveMessage(user, line, styleBI, styleGP);
 	}
 	
-	public void receiveMessage(String user, String line, Style styleBI,
-			Style styleGP) {
+	public void receiveMessage(String user, String line, Style styleBI, Style styleGP) {
         try {        	
 			documentModel.insertString(documentModel.getLength(), user+" : ", styleBI);
 			documentModel.insertString(documentModel.getLength(), line+"\n", styleGP);
@@ -141,6 +139,9 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 		}
 	}
 	
+
+	
+	
 	private boolean authentification() {
 		boolean res=false;
 		String loginPwdQ;
@@ -173,16 +174,11 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 		return res;		
 	}
 
-	public DefaultListModel<String> getClientListModel() {
-		return clientListModel;
-	}
 
 	public void quitServer() throws IOException{
 		System.out.println("quitServer");
-		
 		streamOut.writeUTF(IfClientServerProtocol.DEL+oUser.getLogin());
 		streamOut.flush();
-
 		done=true;
 	}
 	

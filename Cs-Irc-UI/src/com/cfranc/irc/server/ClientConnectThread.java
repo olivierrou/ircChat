@@ -12,8 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.cfranc.irc.IfClientServerProtocol;
-import com.cfranc.irc.ui.SimpleChatFrameServer;
-import com.cfranc.irc.ui.SimpleChatServerApp;
+
 
 /**
  * Ecoute l'arrivée d'un client sur ServerApp
@@ -153,10 +152,7 @@ public class ClientConnectThread extends Thread implements
 
 		System.out.println("supprime un node");
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) clientTreeModel.getRoot();
-
-		System.out.println("removeNode:" + root);
 		
-//		System.out.println(root.toString() + " " + root.getChildCount());
 		for (int i = 0; i < root.getChildCount(); i++) {
 
 			if (root.getChildAt(i).toString().equals(u.getLogin()) ) {
