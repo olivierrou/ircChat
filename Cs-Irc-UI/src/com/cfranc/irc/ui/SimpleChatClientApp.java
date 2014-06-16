@@ -123,11 +123,12 @@ public class SimpleChatClientApp {
     	
     	// ouverture de la Frame de connection
 		this.frameConnect = new ConnectionFrame();
-		this.frameConnect.getFrame().setModal(true);
-		this.frameConnect.getFrame().setVisible(true);
-		userConnect = this.frameConnect.getUserConnect();
-		this.serverName = this.frameConnect.getServerField();
-		this.serverPort = Integer.parseInt(this.frameConnect.getServerPortField());
+		frameConnect.setModal(true);
+		frameConnect.setVisible(true);
+		frameConnect.setLocationRelativeTo(null); 	// Permet de centrer l'écran au lancement de l'application
+		userConnect = frameConnect.getUserConnect();
+		this.serverName = frameConnect.getServerField();
+		this.serverPort = Integer.parseInt(frameConnect.getServerPortField());
 		return !(userConnect == null);
 	}
     

@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,7 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import com.cfranc.irc.impl.DbSingleton;
 import com.cfranc.irc.impl.UserImpl;
 
@@ -25,35 +28,39 @@ import com.cfranc.irc.impl.UserImpl;
  * @author Bertrand Wittmer
  */
 
-public class ConnectionFrame {
+public class ConnectionFrame extends JDialog {
 
-	private JDialog frame;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//private JDialog frame;
 	private JTextField userLoginField;
 	private JTextField userPwdField;
 	private JTextField serverField;
 	private JTextField serverPortField;
 	private UserImpl userConnect = null;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnectionFrame window = new ConnectionFrame();
-
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	public JDialog getFrame() {
-		return frame;
-	}
+//	/**
+//	 * Launch the application.
+//	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					ConnectionFrame window = new ConnectionFrame();
+//
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
+//
+//	public JDialog getFrame() {
+//		return frame;
+//	}
 
 	public UserImpl getUserConnect() {
 		return userConnect;
@@ -67,7 +74,6 @@ public class ConnectionFrame {
 		initialize();
 		
 		// Se connecter à la Base
-		
 		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
 		
 	}
@@ -76,23 +82,22 @@ public class ConnectionFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JDialog();
-		frame.setBounds(100, 100, 353, 184);
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		//frame = new JDialog();
+		setBounds(100, 100, 353, 184);
+		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel panelBtn = new JPanel();
-		frame.getContentPane().add(panelBtn, BorderLayout.SOUTH);
+		getContentPane().add(panelBtn, BorderLayout.SOUTH);
 
-		JButton ConnectBtn = new JButton(new Connecter("Connecter"));
+		JButton ConnectBtn = new JButton(new Connecter("&Connecter"));
 		ConnectBtn.setText("Connecter");
-		JButton annulerBtn = new JButton(new Annuler("Annuler"));
+		JButton annulerBtn = new JButton(new Annuler("&Annuler"));
 		annulerBtn.setText("Annuler");
 		panelBtn.add(ConnectBtn);
 		panelBtn.add(annulerBtn);
 
 		JPanel panelField = new JPanel();
-		frame.getContentPane().add(panelField, BorderLayout.CENTER);
+		getContentPane().add(panelField, BorderLayout.CENTER);
 		GridBagLayout gbl_panelField = new GridBagLayout();
 		gbl_panelField.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 		gbl_panelField.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -111,7 +116,7 @@ public class ConnectionFrame {
 		gbc_userLoginLabel.gridy = 4;
 		panelField.add(userLoginLabel, gbc_userLoginLabel);
 
-		userLoginField = new JTextField("login");
+		userLoginField = new JTextField("");
 		GridBagConstraints gbc_userLoginField = new GridBagConstraints();
 		gbc_userLoginField.insets = new Insets(0, 0, 5, 5);
 		gbc_userLoginField.fill = GridBagConstraints.HORIZONTAL;
@@ -128,7 +133,7 @@ public class ConnectionFrame {
 		gbc_userPwdLabel.gridy = 5;
 		panelField.add(userPwdLabel, gbc_userPwdLabel);
 
-		userPwdField = new JTextField("nom");
+		userPwdField = new JPasswordField("");
 		GridBagConstraints gbc_userPwdField = new GridBagConstraints();
 		gbc_userPwdField.insets = new Insets(0, 0, 5, 5);
 		gbc_userPwdField.fill = GridBagConstraints.HORIZONTAL;
@@ -220,8 +225,7 @@ public class ConnectionFrame {
 			// 1 : Vérifier le Login
 			if (!(userConnect.estInscrit())) {
 				int reply = JOptionPane
-						.showConfirmDialog(
-								frame,
+						.showConfirmDialog(null,
 								"Ce Login n'existe pas \r Voulez-vous créer un nouveau compte ?",
 								"Login inexistant", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
@@ -251,7 +255,7 @@ public class ConnectionFrame {
 			}
 			// Charger le compte de l'utilisateur
 			userConnect.charger(userConnect.getLogin(), userConnect.getPwd());
-			frame.setVisible(false);
+			setVisible(false);
 			;
 		}
 
@@ -263,7 +267,7 @@ public class ConnectionFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			frame.dispose();
+			dispose();
 		}
 	}
 }
