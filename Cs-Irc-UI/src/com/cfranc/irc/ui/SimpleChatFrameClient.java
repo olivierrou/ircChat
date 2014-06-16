@@ -98,7 +98,6 @@ public class SimpleChatFrameClient extends JFrame {
 			documentModel.insertString(documentModel.getLength(), user+" : ", styleBI); //$NON-NLS-1$
 			documentModel.insertString(documentModel.getLength(), line+"\n", styleGP); //$NON-NLS-1$
 		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}				        	
 	}
@@ -289,7 +288,7 @@ public class SimpleChatFrameClient extends JFrame {
 	
 	private class SendAction extends ResourceAction{	
 		private Icon getIcon(){
-			return null; //new ImageIcon(SimpleChatFrameClient.class.getResource("send_16_16.jpg")); //$NON-NLS-1$
+			return null;
 		}
 		public SendAction(){
 			putValue(NAME, Messages.getString("SimpleChatFrameClient.3")); //$NON-NLS-1$

@@ -15,7 +15,6 @@ public class BroadcastThread extends Thread {
 		Collections.synchronizedMap(clientTreadsMap);
 	}
 	
-
 	/**
 	 * 
 	 * @param sender : user à l'origine de l'action

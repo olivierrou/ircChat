@@ -61,13 +61,20 @@ public class User {
 		this.imageURI = imageURI;
 	}	
 	
-	
 	public User(String login, String pwd, String nom, String prenom) {
 		super();
 		this.login = login;
 		this.pwd = pwd;
 		this.nom = nom;
 		this.prenom = prenom;
+	}	
+	
+	public User(String login, String pwd) {
+		super();
+		this.login = login;
+		this.pwd = pwd;
+		this.nom = "";
+		this.prenom = "";
 	}	
 	
 	public User() {

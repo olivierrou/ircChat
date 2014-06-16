@@ -20,7 +20,7 @@ public class SimpleChatServerApp {
 	private SimpleChatFrameServer frame;
 	public StyledDocument model=new DefaultStyledDocument();
 	private ClientConnectThread clientConnectThread;
-	public static DefaultMutableTreeNode root = new DefaultMutableTreeNode("ma liste");
+	public static DefaultMutableTreeNode root = new DefaultMutableTreeNode("Liste des connectés");
 	public static DefaultTreeModel clientTreeModel = new DefaultTreeModel(root);
 	public static SimpleChatServerApp app;
     
@@ -30,7 +30,7 @@ public class SimpleChatServerApp {
 		SimpleChatFrameServer simpleChatFrameServer= new SimpleChatFrameServer(port, this.model, clientTreeModel); //, clientTreeModel);
 		this.frame=simpleChatFrameServer; 	
 		try {
-			this.model.insertString(this.model.getLength(), "Wellcome into IRC Server Manager\n", null);
+			this.model.insertString(this.model.getLength(), "Welcome into IRC Server Manager\n", null);
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
