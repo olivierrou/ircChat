@@ -67,6 +67,7 @@ public class ConnectionFrame {
 		initialize();
 		
 		// Se connecter à la Base
+		
 		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
 		
 	}

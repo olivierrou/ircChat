@@ -1,10 +1,12 @@
 package com.cfranc.irc.impl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import com.cfranc.irc.server.User;
 
 public class UserImpl extends User {
@@ -22,7 +24,8 @@ public class UserImpl extends User {
 	 * @param prenom
 	 * @param imageURI
 	 */
-	public UserImpl(String login, String pwd, String nom, String prenom, String imageURI) {
+	public UserImpl(String login, String pwd, String nom, String prenom,
+			String imageURI) {
 		super(login, pwd, nom, prenom, imageURI);
 	}
 
@@ -49,42 +52,61 @@ public class UserImpl extends User {
 		String sql;
 
 		if (id == 0) {
-			sql = "INSERT INTO User (Nom, Prenom, Login, MotPasse, ImageURI)  VALUES (?,?,?,?,?)";
+			Connection c = DbSingleton.getInstance().getConnection();
+			Statement statement;
+			try {
+				statement = c.createStatement();
+				// Un peu lourdingue et propice à des bugs mais c'est une
+				// alternative au PreparedStatement qui bloquait
+				sql = "INSERT INTO User (Nom, Prenom, Login, MotPasse, ImageURI) VALUES ('"
+						+ this.getNom()
+						+ "','"
+						+ this.getPrenom()
+						+ "','"
+						+ this.getLogin()
+						+ "','"
+						+ this.getPwd()
+						+ "','"
+						+ this.getImageURI() + "')";
+				System.out.println(sql);
+				statement.executeUpdate(sql);
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else {
-			sql = "UPDATE User SET Nom=?, Prenom=?, Login=?, MotPasse=?, ImageURI=? WHERE IdUser=" + id;
+			sql = "UPDATE User SET Nom=?, Prenom=?, Login=?, MotPasse=?, ImageURI=? WHERE IdUser="
+					+ id;
+
+			try {
+				PreparedStatement stt = DbSingleton.getInstance()
+						.getConnection().prepareStatement(sql); // ,
+
+				System.out.println(sql); // Statement.RETURN_GENERATED_KEYS);
+
+				stt.setString(1, this.getNom());
+				stt.setString(2, this.getPrenom());
+				stt.setString(3, this.getLogin());
+				stt.setString(4, this.getPwd());
+				stt.setString(5, this.getImageURI());
+
+				stt.executeUpdate();
+
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
-		try {
-			PreparedStatement stt = DbSingleton.getInstance().getConnection().prepareStatement(sql); // ,
-			
-			System.out.println(sql); // Statement.RETURN_GENERATED_KEYS);
-
-			
-			stt.setString(1, this.getNom());
-			stt.setString(2, this.getPrenom());
-			stt.setString(3, this.getLogin());
-			stt.setString(4, this.getPwd());
-			stt.setString(5, this.getImageURI());
-
-			stt.executeUpdate();
-			//
-			// ResultSet rs = stt.getGeneratedKeys();
-			// if (rs.next()){
-			// int i =rs.getInt(1);
-			// }
-			//
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		return 0;
 	}
 
 	/**
 	 * 
-	 * @return false si le login n'existe pas dans la base true si le login existe
+	 * @return false si le login n'existe pas dans la base true si le login
+	 *         existe
 	 */
 	public boolean estInscrit() {
 
@@ -92,9 +114,11 @@ public class UserImpl extends User {
 		Statement statement;
 
 		try {
-			statement = DbSingleton.getInstance().getConnection().createStatement();
+			statement = DbSingleton.getInstance().getConnection()
+					.createStatement();
 			statement.setQueryTimeout(30);
-			String sql = "select count(*) as Nb from User where Login='" + this.getLogin() + "'";
+			String sql = "select count(*) as Nb from User where Login='"
+					+ this.getLogin() + "'";
 			ResultSet rs = statement.executeQuery(sql);
 			retour = (rs != null && rs.getInt("Nb") > 0);
 
@@ -107,7 +131,8 @@ public class UserImpl extends User {
 
 	/**
 	 * 
-	 * @return boolean true si le mot de passe est ok false si le mot de passe est inccorect
+	 * @return boolean true si le mot de passe est ok false si le mot de passe
+	 *         est inccorect
 	 * 
 	 */
 	public boolean estMotPasseCorrect() {
@@ -116,9 +141,12 @@ public class UserImpl extends User {
 		Statement statement;
 
 		try {
-			statement = DbSingleton.getInstance().getConnection().createStatement();
+			statement = DbSingleton.getInstance().getConnection()
+					.createStatement();
 			statement.setQueryTimeout(30);
-			String sql = "select count(*) as Nb from User where Login='" + this.getLogin() + "' and MotPasse='" + this.getPwd() + "'";
+			String sql = "select count(*) as Nb from User where Login='"
+					+ this.getLogin() + "' and MotPasse='" + this.getPwd()
+					+ "'";
 			ResultSet rs = statement.executeQuery(sql);
 			retour = (rs != null && rs.getInt("Nb") > 0);
 			System.out.println(rs.getInt("Nb"));
@@ -136,9 +164,11 @@ public class UserImpl extends User {
 		Statement statement;
 
 		try {
-			statement = DbSingleton.getInstance().getConnection().createStatement();
+			statement = DbSingleton.getInstance().getConnection()
+					.createStatement();
 			statement.setQueryTimeout(30);
-			String sql = "select * from User where Login='" + login + "' and MotPasse='" + pwd + "'";
+			String sql = "select * from User where Login='" + login
+					+ "' and MotPasse='" + pwd + "'";
 			System.out.println(sql);
 			ResultSet rs = statement.executeQuery(sql);
 
@@ -147,7 +177,7 @@ public class UserImpl extends User {
 			System.out.println(retour);
 			if (retour) {
 				System.out.println(rs.getString("ImageURI"));
-				
+
 				this.setImageURI(rs.getString("ImageURI"));
 				this.setLogin(rs.getString("Login"));
 				this.setNom(rs.getString("Nom"));
@@ -166,7 +196,8 @@ public class UserImpl extends User {
 		System.out.println("je rntre dans le main du singleton");
 		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
 
-		UserImpl u = new UserImpl("login444", "motpasse", "prenom444", "motpasse");
+		UserImpl u = new UserImpl("login444", "motpasse", "prenom444",
+				"motpasse");
 		u.enregistrer();
 
 		UserImpl u2 = new UserImpl("login", "nom", "prenom", "motpasse");

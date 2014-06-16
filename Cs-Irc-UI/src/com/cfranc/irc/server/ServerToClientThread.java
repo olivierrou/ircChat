@@ -80,8 +80,6 @@ public class ServerToClientThread extends Thread{
 							BroadcastThread.sendMessage(user,msg);
 						} else {
 							BroadcastThread.deleteUser(user);
-							
-							
 						}
 							
 					}

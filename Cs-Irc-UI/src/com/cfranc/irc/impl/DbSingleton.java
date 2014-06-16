@@ -1,10 +1,11 @@
 package com.cfranc.irc.impl;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
+
 import org.sqlite.JDBC;
 
 
@@ -20,6 +21,8 @@ public class DbSingleton {
     }
 
     public Connection getConnection() {
+    	
+    	System.out.println(connection.toString());
     	return connection;
     }
 
