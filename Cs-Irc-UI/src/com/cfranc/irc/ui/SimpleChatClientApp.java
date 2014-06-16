@@ -124,8 +124,8 @@ public class SimpleChatClientApp {
     	// ouverture de la Frame de connection
 		this.frameConnect = new ConnectionFrame();
 		frameConnect.setModal(true);
-		frameConnect.setVisible(true);
 		frameConnect.setLocationRelativeTo(null); 	// Permet de centrer l'écran au lancement de l'application
+		frameConnect.setVisible(true);
 		userConnect = frameConnect.getUserConnect();
 		this.serverName = frameConnect.getServerField();
 		this.serverPort = Integer.parseInt(frameConnect.getServerPortField());

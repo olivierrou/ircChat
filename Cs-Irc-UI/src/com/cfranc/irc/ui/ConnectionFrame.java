@@ -36,7 +36,7 @@ public class ConnectionFrame extends JDialog {
 	private static final long serialVersionUID = 1L;
 	//private JDialog frame;
 	private JTextField userLoginField;
-	private JTextField userPwdField;
+	private JPasswordField userPwdField;
 	private JTextField serverField;
 	private JTextField serverPortField;
 	private UserImpl userConnect = null;
@@ -75,7 +75,6 @@ public class ConnectionFrame extends JDialog {
 		
 		// Se connecter à la Base
 		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
-		
 	}
 
 	/**
@@ -89,9 +88,9 @@ public class ConnectionFrame extends JDialog {
 		JPanel panelBtn = new JPanel();
 		getContentPane().add(panelBtn, BorderLayout.SOUTH);
 
-		JButton ConnectBtn = new JButton(new Connecter("&Connecter"));
+		JButton ConnectBtn = new JButton(new Connecter("Connecter"));
 		ConnectBtn.setText("Connecter");
-		JButton annulerBtn = new JButton(new Annuler("&Annuler"));
+		JButton annulerBtn = new JButton(new Annuler("Annuler"));
 		annulerBtn.setText("Annuler");
 		panelBtn.add(ConnectBtn);
 		panelBtn.add(annulerBtn);
