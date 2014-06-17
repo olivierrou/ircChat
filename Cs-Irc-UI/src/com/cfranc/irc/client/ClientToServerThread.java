@@ -21,7 +21,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 	private Socket socket = null;
 	private DataOutputStream streamOut = null;
 	private DataInputStream streamIn = null;
-	private BufferedReader console = null;
+	//private BufferedReader console = null;
 	User oUser = null;
 	DefaultListModel<String> clientListModel;
 	StyledDocument documentModel;
@@ -35,7 +35,7 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 	}
 	
 	public void open() throws IOException {
-		console = new BufferedReader(new InputStreamReader(System.in));
+		//console = new BufferedReader(new InputStreamReader(System.in));
 		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 		streamOut = new DataOutputStream(socket.getOutputStream());
 	}
@@ -55,7 +55,8 @@ public class ClientToServerThread extends Thread implements IfSenderModel{
 	}
 	
 	public void receiveMessage(String user, String line, Style styleBI, Style styleGP) {
-        try {        	
+        try {    
+        	System.out.println("affiche");
 			documentModel.insertString(documentModel.getLength(), user+" : ", styleBI);
 			documentModel.insertString(documentModel.getLength(), line+"\n", styleGP);
 		} catch (BadLocationException e1) {

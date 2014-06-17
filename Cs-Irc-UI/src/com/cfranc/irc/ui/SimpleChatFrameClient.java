@@ -15,7 +15,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,12 +36,18 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTMLDocument;
+
 
 import com.cfranc.irc.client.IfSenderModel;
 import com.cfranc.irc.impl.UserImpl;
@@ -53,15 +58,21 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
 import javax.swing.JCheckBoxMenuItem;
 
 public class SimpleChatFrameClient extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Document documentModel;
 	private static ListModel<String> listModel;
 	IfSenderModel sender;
 	private String senderName;	
-
+	private static JTextPane textArea;
+	//private static HTMLEditorKit editorKit;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JLabel lblSender;
@@ -93,16 +104,19 @@ public class SimpleChatFrameClient extends JFrame {
 		}
 	}
 
-	public static void sendMessage(String user, String line, Style styleBI,
-			Style styleGP) {
-        try {
-			documentModel.insertString(documentModel.getLength(), user+" : ", styleBI); //$NON-NLS-1$
-			documentModel.insertString(documentModel.getLength(), line+"\n", styleGP); //$NON-NLS-1$
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}				        	
-	}
-	
+//	public static void sendMessage(String user, String line, Style styleBI, Style styleGP) {
+//        try {
+//        	documentModel.insertString(documentModel.getLength(), user+" : ", styleBI); //$NON-NLS-1$
+//			documentModel.insertString(documentModel.getLength(), line+"\n", styleGP); //$NON-NLS-1$
+//
+//		} catch (BadLocationException e1) {
+//			e1.printStackTrace();
+//		}				        	
+//	}
+//	
+	/**
+	 * Envoi le message saisi au serveur
+	 */
 	public void sendMessage() {
 		sender.setMsgToSend(textField.getText());
 	}
@@ -117,6 +131,47 @@ public class SimpleChatFrameClient extends JFrame {
 	public SimpleChatFrameClient(IfSenderModel sender, ListModel<String> clientListModel, Document documentModel) {
 		this.sender=sender;
 		this.documentModel=documentModel;
+		this.documentModel.addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+			
+			    Document d =  e.getDocument();
+
+			    try {
+			    	String inserted = d.getText(0, d.getLength());
+			    	
+			    	System.out.println(inserted);
+			    	inserted = inserted.replace("\n", "<br>");
+			    	
+					// :)
+					inserted = inserted.replace(":)", "<img src=\"http://www.freesmileys.org/smileys/smiley-basic/explode.gif\"</img>");
+					
+					// :(
+					inserted = inserted.replace(":(", "<img src=\"http://www.freesmileys.org/smileys/smiley-basic/sad.gif\"</img>");
+					
+					textArea.setText(inserted);
+					
+				} catch (BadLocationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
 		this.listModel=clientListModel;
 		setTitle(Messages.getString("SimpleChatFrameClient.4")); //$NON-NLS-1$
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -188,7 +243,6 @@ public class SimpleChatFrameClient extends JFrame {
 		            int index = l.locationToIndex(evt.getPoint());
 		            UserImpl u = new UserImpl();
 		            
-		            System.out.println("psychaitre:" + l.getSelectedValue().toString());
 		            u.charger(l.getSelectedValue().toString());
 		            UserCompte uc = new UserCompte(2);
 		            uc.setUserConnect(u);
@@ -198,8 +252,6 @@ public class SimpleChatFrameClient extends JFrame {
 		    }
 		});
 
-		
-		
 		list.setMinimumSize(new Dimension(100, 0));
 		
 		// Split Panel
@@ -207,9 +259,9 @@ public class SimpleChatFrameClient extends JFrame {
 		
 		// TabPanel
 		JTabbedPane tabbedPane = new JTabbedPane();
-		
-		JTextPane textArea = new JTextPane((StyledDocument)documentModel);
-		textArea.setEnabled(false);
+		textArea = new JTextPane();
+		textArea.setContentType("text/html");
+		textArea.setEditable(false);
 		JScrollPane scrollPaneText=new JScrollPane(textArea);
 		
 		tabbedPane.addTab("Salon principal", scrollPaneText);
@@ -227,13 +279,11 @@ public class SimpleChatFrameClient extends JFrame {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if(isScrollLocked){
-					
 					e.getAdjustable().setValue(e.getAdjustable().getMaximum());
 				}				
 			}
 		});
 
-		//splitPane.setRightComponent(scrollPaneText);
 		splitPane.setRightComponent(tabbedPane);
 		
 		
@@ -290,7 +340,6 @@ public class SimpleChatFrameClient extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				toolBar.setVisible(mntmCacherBarreMenu.isSelected());
 			}
 		});	
@@ -319,6 +368,7 @@ public class SimpleChatFrameClient extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			sendMessage();
+			textField.setText("");
 		}
 	}
 	

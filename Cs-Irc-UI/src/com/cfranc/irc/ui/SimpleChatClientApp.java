@@ -33,18 +33,16 @@ import com.cfranc.irc.ui.SimpleChatFrameClient;
  */
 
 public class SimpleChatClientApp {
-	public static SimpleChatClientApp app = new SimpleChatClientApp();
 	
-    static String[] ConnectOptionNames = { "Connect" };	
-    static String   ConnectTitle = "Connection Information";
+	public static SimpleChatClientApp app = new SimpleChatClientApp();
     Socket socketClientServer;
     int serverPort;
     public User userConnect;
     String serverName;
     private SimpleChatFrameClient frameClient;
     private ConnectionFrame frameConnect;
-	public StyledDocument documentModel=new DefaultStyledDocument();
-	DefaultListModel<String> clientListModel=new DefaultListModel<String>();
+	public StyledDocument documentModel=new DefaultStyledDocument();			// texte de la discussion
+	DefaultListModel<String> clientListModel=new DefaultListModel<String>();	// liste des users
 	private static ClientToServerThread clientToServerThread;
 	
     public static final String BOLD_ITALIC = "BoldItalic";

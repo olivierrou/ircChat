@@ -1,7 +1,6 @@
 package com.cfranc.irc.ui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,14 +9,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.cfranc.irc.impl.DbSingleton;
 import com.cfranc.irc.impl.UserImpl;
 
 /**
@@ -28,39 +25,19 @@ import com.cfranc.irc.impl.UserImpl;
  * @author Bertrand Wittmer
  */
 
+
 public class ConnectionFrame extends JDialog {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	//private JDialog frame;
 	private JTextField userLoginField;
 	private JPasswordField userPwdField;
 	private JTextField serverField;
 	private JTextField serverPortField;
 	private UserImpl userConnect = null;
 
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ConnectionFrame window = new ConnectionFrame();
-//
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-//
-//	public JDialog getFrame() {
-//		return frame;
-//	}
 
 	public UserImpl getUserConnect() {
 		return userConnect;
@@ -72,25 +49,22 @@ public class ConnectionFrame extends JDialog {
 	public ConnectionFrame() {
 	
 		initialize();
-		
-		// Se connecter à la Base
-		//DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		//frame = new JDialog();
 		setBounds(100, 100, 353, 184);
 		getContentPane().setLayout(new BorderLayout(0, 0));
-
+		setTitle("Bienvenue sur le chat!");
+		
 		JPanel panelBtn = new JPanel();
 		getContentPane().add(panelBtn, BorderLayout.SOUTH);
 
-		JButton ConnectBtn = new JButton(new Connecter("Connecter"));
+		JButton ConnectBtn = new JButton(new Connecter());
 		ConnectBtn.setText("Connecter");
-		JButton annulerBtn = new JButton(new Annuler("Annuler"));
+		JButton annulerBtn = new JButton(new Annuler());
 		annulerBtn.setText("Annuler");
 		panelBtn.add(ConnectBtn);
 		panelBtn.add(annulerBtn);
@@ -194,10 +168,8 @@ public class ConnectionFrame extends JDialog {
 	}
 
 	/********************* Action des boutons *********************/
-	public class Connecter extends AbstractAction {
-		public Connecter(String texte) {
-			super(texte);
-		}
+	private class Connecter extends AbstractAction {
+
 
 		public void actionPerformed(ActionEvent e) {
 
@@ -228,11 +200,7 @@ public class ConnectionFrame extends JDialog {
 								"Ce Login n'existe pas \r Voulez-vous créer un nouveau compte ?",
 								"Login inexistant", JOptionPane.YES_NO_OPTION);
 				if (reply == JOptionPane.YES_OPTION) {
-					// TODO : Ouvrir la frame de saisie d'un nouveau compte.
-					// System.out.println("Saisir un nouveau compte");
-					
 					UserCompte f = new UserCompte(1);
-					
 					f.setModal(true);
 					f.setLocationRelativeTo(null); 	// Permet de centrer l'écran au lancement de l'application
 					f.setVisible(true);
@@ -246,8 +214,7 @@ public class ConnectionFrame extends JDialog {
 			}
 			// Vérifier le mot de passe
 			if (!(userConnect.estMotPasseCorrect())) {
-				JOptionPane.showMessageDialog(null, "Mot de passe incorrect.",
-						"Inane error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Mot de passe incorrect.", "Inane error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			// Charger le compte de l'utilisateur
@@ -258,10 +225,8 @@ public class ConnectionFrame extends JDialog {
 
 	}
 
-	public class Annuler extends AbstractAction {
-		public Annuler(String texte) {
-			super(texte);
-		}
+	private class Annuler extends AbstractAction {
+
 
 		public void actionPerformed(ActionEvent e) {
 			dispose();
