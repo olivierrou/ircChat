@@ -150,13 +150,11 @@ public class ClientConnectThread extends Thread implements
 
 	public static void removeNode(User u) {
 
-		System.out.println("supprime un node");
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) clientTreeModel.getRoot();
 		
 		for (int i = 0; i < root.getChildCount(); i++) {
 
 			if (root.getChildAt(i).toString().equals(u.getLogin()) ) {
-				System.out.println("dégage connard");
 				root.remove(i);
 			}
 			clientTreeModel.reload();

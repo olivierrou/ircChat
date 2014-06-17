@@ -20,7 +20,7 @@ class SimpleChatServerApp {
 	// Ecran principal
 	private SimpleChatFrameServer frame;
 	
-	// Console du serveur
+	// Modèle de la console du serveur
 	public StyledDocument model = new DefaultStyledDocument();
 	
 	
@@ -31,18 +31,18 @@ class SimpleChatServerApp {
 
 	private SimpleChatServerApp(int port) {
 
-		// Init GUI
-		SimpleChatFrameServer simpleChatFrameServer = 
-				new SimpleChatFrameServer(port, this.model, clientTreeModel);
-		
-		this.frame = simpleChatFrameServer;
-		
 		// Insère le message d'accueil
 		try {
 			this.model.insertString(this.model.getLength(),"Welcome into IRC Server Manager\n", null);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+		
+		// Init GUI
+		SimpleChatFrameServer simpleChatFrameServer = 
+				new SimpleChatFrameServer(port, this.model, clientTreeModel);
+		
+		this.frame = simpleChatFrameServer;
 		
 		// Affiche l'écran
 		((JFrame) this.frame).setVisible(true);
