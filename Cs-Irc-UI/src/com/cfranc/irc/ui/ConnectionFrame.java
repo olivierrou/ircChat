@@ -74,7 +74,7 @@ public class ConnectionFrame extends JDialog {
 		initialize();
 		
 		// Se connecter à la Base
-		DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
+		//DbSingleton.getInstance().connectSqlLite("db/ircdb.sqlite");
 	}
 
 	/**
@@ -231,13 +231,11 @@ public class ConnectionFrame extends JDialog {
 					// TODO : Ouvrir la frame de saisie d'un nouveau compte.
 					// System.out.println("Saisir un nouveau compte");
 					
-					UserCompteFrame cuf = new UserCompteFrame();
+					UserCompte f = new UserCompte(1);
 					
-					System.out.println("jouvre en modal");
-					cuf.frame.setModal(true);
-					cuf.frame.setVisible(true);
-
-					//frame.setVisible(false);
+					f.setModal(true);
+					f.setLocationRelativeTo(null); 	// Permet de centrer l'écran au lancement de l'application
+					f.setVisible(true);
 
 					
 					return;

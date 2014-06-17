@@ -45,6 +45,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
 import com.cfranc.irc.client.IfSenderModel;
+import com.cfranc.irc.impl.UserImpl;
 
 import javax.swing.JPopupMenu;
 
@@ -178,6 +179,27 @@ public class SimpleChatFrameClient extends JFrame {
 				}
 			}
 		});
+		
+		list.addMouseListener(new MouseAdapter() {
+			
+		    public void mouseClicked(MouseEvent evt) {
+		       JList l = (JList)evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		            int index = l.locationToIndex(evt.getPoint());
+		            UserImpl u = new UserImpl();
+		            
+		            System.out.println("psychaitre:" + l.getSelectedValue().toString());
+		            u.charger(l.getSelectedValue().toString());
+		            UserCompte uc = new UserCompte(2);
+		            uc.setUserConnect(u);
+		            uc.setModal(true);
+		            uc.setVisible(true);
+		        } 
+		    }
+		});
+
+		
+		
 		list.setMinimumSize(new Dimension(100, 0));
 		
 		// Split Panel

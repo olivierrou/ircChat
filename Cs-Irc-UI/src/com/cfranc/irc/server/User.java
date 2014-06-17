@@ -76,6 +76,15 @@ public class User {
 		this.nom = "";
 		this.prenom = "";
 	}	
+
+	public User(String login) {
+		super();
+		this.login = login;
+		this.pwd = "";
+		this.nom = "";
+		this.prenom = "";
+	}	
+	
 	
 	public User() {
 		super();

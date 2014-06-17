@@ -6,14 +6,19 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import com.cfranc.irc.impl.DbSingleton;
 import com.cfranc.irc.impl.UserImpl;
 
@@ -57,6 +62,12 @@ public class UserCompteFrame {
 
 	public UserImpl getUserConnect() {
 		return userConnect;
+	}
+
+	
+	void setUserConnect(UserImpl userConnect) {
+		this.userConnect = userConnect;
+		
 	}
 
 	/**
@@ -173,6 +184,28 @@ public class UserCompteFrame {
 		gbc_lblAvatar.gridx = 1;
 		gbc_lblAvatar.gridy = 8;
 		panelField.add(lblAvatar, gbc_lblAvatar);
+		
+		JButton btnImage = new JButton("S\u00E9lectionner une image");
+		GridBagConstraints gbc_btnImage = new GridBagConstraints();
+		gbc_btnImage.insets = new Insets(0, 0, 5, 5);
+		gbc_btnImage.gridx = 3;
+		gbc_btnImage.gridy = 8;
+		btnImage.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			    JFileChooser chooser = new JFileChooser();
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter( "JPG & GIF Images", "jpg", "gif");
+			    chooser.setFileFilter(filter);
+			    int returnVal = chooser.showOpenDialog(null);
+			    if(returnVal == JFileChooser.APPROVE_OPTION) {
+			       System.out.println("You chose to open this file: " +
+			            chooser.getSelectedFile().getName());
+			    }
+				
+			}
+		});
+		panelField.add(btnImage, gbc_btnImage);
 	}
 
 	/********************* Action des textField ********************/
